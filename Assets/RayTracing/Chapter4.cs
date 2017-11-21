@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Chapter4 : ChapterBase
 {
-    protected override Color GetColor(RTRay ray, int depth)
+    public override Color GetColor(RTRay ray, int depth)
     {
         Vector3 sphereCenter = new Vector3(0, 0, -1);
         float sphereRadius = 0.5f;

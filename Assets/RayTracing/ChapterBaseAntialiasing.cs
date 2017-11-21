@@ -10,9 +10,11 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
     private RenderingTasksManager renderingTasksManager = new RenderingTasksManager();
 
-    private bool multiThreadRendering = true;
+	protected bool multiThreadRendering = true;
 
-    private bool isScreenSize = false;
+	protected bool isScreenSize = false;
+
+	protected int numSamples = 100;
 
     protected virtual void Awake()
     {
@@ -24,8 +26,6 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
         cam = new RTCamera();
 
         ppmTexture.Init(isScreenSize ? Screen.width : 200, isScreenSize ? Screen.height : 100);
-
-        int numSamples = 100;
 
         Vector3 origin = Vector3.zero;
         Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
@@ -99,13 +99,6 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
     public virtual Color GetColor(RTRay ray, int depth)
     {
         return Color.white;
-    }
-
-    protected Color GetEnvironmentColor(RTRay ray)
-    {
-        Vector3 unit_dir = ray.direction.normalized;
-        float blend = (unit_dir.y + 1) * 0.5f;
-        return Color.white * (1 - blend) + new Color(0.5f, 0.7f, 1) * blend;
     }
 
     private void RenderingTaskCompleteCB(RenderingTask task)

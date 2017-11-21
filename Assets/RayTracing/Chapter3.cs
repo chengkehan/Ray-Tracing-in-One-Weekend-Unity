@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Chapter3 : ChapterBase
 {
-    protected override Color GetColor(RTRay ray, int depth)
+    public override Color GetColor(RTRay ray, int depth)
     {
         return GetBackgroundColor(ray);
     }

@@ -4,6 +4,16 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+public class RTCanvas
+{
+	public static Color GetEnvironmentColor(RTRay ray)
+	{
+		Vector3 unit_dir = ray.direction.normalized;
+		float blend = (unit_dir.y + 1) * 0.5f;
+		return Color.white * (1 - blend) + new Color(0.5f, 0.7f, 1) * blend;
+	}
+}
+
 public class RTMath
 {
     private static System.Random rnd = new System.Random();

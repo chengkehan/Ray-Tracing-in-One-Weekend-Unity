@@ -14,7 +14,7 @@ public class Chapter5_3 : ChapterBase
         scene.list.Add(new RTSphere().Set(new Vector3(0, -100.5f, -1), 100));
     }
 
-    protected override Color GetColor(RTRay ray, int depth)
+    public override Color GetColor(RTRay ray, int depth)
     {
         HitRecord hit;
         if(scene.Hit(ray, 0, 1000, out hit))

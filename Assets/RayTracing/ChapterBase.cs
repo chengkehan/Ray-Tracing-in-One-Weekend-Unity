@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChapterBase : MonoBehaviour
+public class ChapterBase : MonoBehaviour, RTRenderer
 {
     protected PPMTexture ppmTexture = new PPMTexture();
 
@@ -35,7 +35,7 @@ public class ChapterBase : MonoBehaviour
         ppmTexture.Complete();
     }
 
-    protected virtual Color GetColor(RTRay ray, int depth)
+	public virtual Color GetColor(RTRay ray, int depth)
     {
         return Color.white;
     }

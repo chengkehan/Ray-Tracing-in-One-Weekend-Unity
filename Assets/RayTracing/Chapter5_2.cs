@@ -12,7 +12,7 @@ public class Chapter5_2 : ChapterBase
         sphere.Set(new Vector3(0, 0, -1), 0.5f);
     }
 
-    protected override Color GetColor(RTRay ray, int depth)
+    public override Color GetColor(RTRay ray, int depth)
     {
         HitRecord hit;
         if(sphere.Hit(ray, 0, 1000, out hit))

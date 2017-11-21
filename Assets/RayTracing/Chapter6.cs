@@ -8,6 +8,8 @@ public class Chapter6 : ChapterBaseAntialiasing
 
     protected override void Awake()
     {
+		multiThreadRendering = true;
+
         scene = new HitableList();
 
         scene.list.Add(new RTSphere().Set(new Vector3(0, 0, -1), 0.5f));
@@ -23,6 +25,6 @@ public class Chapter6 : ChapterBaseAntialiasing
             return new Color((n.x + 1) * 0.5f, (n.y + 1) * 0.5f, (n.z + 1) * 0.5f);
         }
 
-        return GetEnvironmentColor(ray);
+		return RTCanvas.GetEnvironmentColor(ray);
     }
 }
