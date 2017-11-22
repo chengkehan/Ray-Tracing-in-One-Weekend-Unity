@@ -8,6 +8,8 @@ public class Chapter7 : ChapterBaseAntialiasing
 
     protected override void Awake()
     {
+		base.Awake();
+
         scene = new HitableList();
 
         scene.list.Add(new RTSphere().Set(new Vector3(0, 0, -1), 0.5f));

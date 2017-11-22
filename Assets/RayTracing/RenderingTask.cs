@@ -206,6 +206,8 @@ public class RenderingTask
 
     private void Working()
     {
+		RTMath.ThreadInitRnd();
+
         for (int i = 0; i < pIndex; ++i)
         {
             if(IsDestroied)

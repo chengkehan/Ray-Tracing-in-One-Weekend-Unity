@@ -18,7 +18,7 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
     protected virtual void Awake()
     {
-
+		RTMath.ThreadInitRnd();
     }
 
     protected virtual void Start()

@@ -8,6 +8,8 @@ public class Chapter5_2 : ChapterBase
 
     protected override void Awake()
     {
+		base.Awake();
+
         sphere = new RTSphere();
         sphere.Set(new Vector3(0, 0, -1), 0.5f);
     }

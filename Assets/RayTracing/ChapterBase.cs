@@ -8,7 +8,7 @@ public class ChapterBase : MonoBehaviour, RTRenderer
 
     protected virtual void Awake()
     {
-
+		RTMath.ThreadInitRnd();
     }
 
     protected virtual void Start()

@@ -8,6 +8,8 @@ public class Chapter6 : ChapterBaseAntialiasing
 
     protected override void Awake()
     {
+		base.Awake();
+
 		multiThreadRendering = true;
 
         scene = new HitableList();

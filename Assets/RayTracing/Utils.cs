@@ -16,16 +16,18 @@ public class RTCanvas
 
 public class RTMath
 {
-    private static System.Random rnd = new System.Random();
+	private static LocalDataStoreSlot rndSlot = Thread.AllocateDataSlot();
+
+	public static void ThreadInitRnd()
+	{
+		Thread.SetData(rndSlot, new System.Random(Thread.CurrentThread.ManagedThreadId));
+	}
 
     // [0-1)
     public static float Rnd01()
     {
-        float value;
-        lock(rnd)
-        {
-            value = rnd.Next(0, 10000) / 10000.0f;
-        }
+		System.Random rnd = Thread.GetData(rndSlot) as System.Random;
+        float value = rnd.Next(0, 10000) / 10000.0f;
         return value;
     }
 

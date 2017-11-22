@@ -8,6 +8,8 @@ public class Chapter8 : ChapterBaseAntialiasing
 
     protected override void Awake()
 	{
+		base.Awake();
+
         ppmTexture.sRGB = true;
 
         scene = new HitableList();
