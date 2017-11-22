@@ -163,7 +163,7 @@ public class Dielectric : RTMaterial
         {
             outwardN = -hit.n;
             ni_over_nt = refractiveIndex;
-            cosine = refractiveIndex * Vector3.Dot(ray.direction, hit.n) / ray.direction.magnitude;
+            cosine = Vector3.Dot(ray.direction, hit.n) / ray.direction.magnitude;
         }
         else
         {
