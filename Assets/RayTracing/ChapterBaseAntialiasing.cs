@@ -23,9 +23,12 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
     protected virtual void Start()
     {
-        cam = new RTCamera();
+		int texWidth = isScreenSize ? Screen.width : 200;
+		int texHeight = isScreenSize ? Screen.height : 100;
 
-        ppmTexture.Init(isScreenSize ? Screen.width : 200, isScreenSize ? Screen.height : 100);
+		cam = new RTCamera(90, (float)texWidth / texHeight);
+
+		ppmTexture.Init(texWidth, texHeight);
 
         Vector3 origin = Vector3.zero;
         Vector3 leftBottomCorner = new Vector3(-2, -1, -1);

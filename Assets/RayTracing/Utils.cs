@@ -298,9 +298,22 @@ public class HitableList : Hitable
 public class RTCamera
 {
     private Vector3 origin = Vector3.zero;
-    private Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
-    private Vector3 horizontal = new Vector3(4, 0, 0);
-    private Vector3 vertical = new Vector3(0, 2, 0);
+	private Vector3 leftBottomCorner = Vector3.zero;
+	private Vector3 horizontal = Vector3.zero;
+	private Vector3 vertical = Vector3.zero;
+
+	public RTCamera(float fov, float aspect)
+	{
+		float theta = fov * Mathf.PI / 180.0f;
+		float zPlane = -1;
+		float half_height = Mathf.Tan(theta * 0.5f) * Mathf.Abs(zPlane);
+		float half_width = half_height * aspect;
+
+		leftBottomCorner = new Vector3(-half_width, -half_height, zPlane);
+		horizontal = new Vector3(2 * half_width, 0, 0);
+		vertical = new Vector3(0, 2 * half_height, 0);
+		origin = new Vector3(0, 0, 0);
+	}
 
     public RTRay GetRay(float u, float v)
     {
