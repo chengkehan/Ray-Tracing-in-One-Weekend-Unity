@@ -75,6 +75,6 @@ public class Chapter10 : ChapterBaseAntialiasing
 
 	public override IRTCamera CreateCamera (int canvasWidth, int canvasHeight)
 	{
-		return new RTCameraB(90, (float)canvasWidth / canvasHeight);
+		return new RTCameraC(new Vector3(-2, 2, 1), new Vector3(0, 0, -1), Vector3.up, 90, (float)canvasWidth / canvasHeight);
 	}
 }

@@ -342,3 +342,34 @@ public class RTCameraB : IRTCamera
         return ray;
     }
 }
+
+public class RTCameraC : IRTCamera
+{
+	private Vector3 origin = Vector3.zero;
+	private Vector3 leftBottomCorner = Vector3.zero;
+	private Vector3 horizontal = Vector3.zero;
+	private Vector3 vertical = Vector3.zero;
+
+	public RTCameraC(Vector3 lookFrom, Vector3 lookAt, Vector3 up,  float fov, float aspect)
+	{
+		float theta = fov * Mathf.PI / 180.0f;
+		float half_height = Mathf.Tan(theta * 0.5f);
+		float half_width = half_height * aspect;
+
+		origin = lookFrom;
+		Vector3 w = lookFrom - lookAt; w.Normalize();
+		Vector3 u = Vector3.Cross(up, w); u.Normalize();
+		Vector3 v = Vector3.Cross(w, u);
+
+		leftBottomCorner = origin - half_width * u - half_height * v - w;
+		horizontal = half_width * u * 2;
+		vertical = half_height * v * 2;
+	}
+
+	public RTRay GetRay(float u, float v)
+	{
+		RTRay ray = new RTRay();
+		ray.Set(origin, leftBottomCorner + horizontal * u + vertical * v - origin);
+		return ray;
+	}
+}
