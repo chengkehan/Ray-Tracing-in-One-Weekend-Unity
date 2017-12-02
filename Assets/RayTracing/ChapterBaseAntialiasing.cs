@@ -6,7 +6,7 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 {
     protected PPMTexture ppmTexture = new PPMTexture();
 
-    protected RTCamera cam = null;
+	protected IRTCamera cam = null;
 
     private RenderingTasksManager renderingTasksManager = new RenderingTasksManager();
 
@@ -23,12 +23,11 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
     protected virtual void Start()
     {
-		int texWidth = isScreenSize ? Screen.width : 200;
-		int texHeight = isScreenSize ? Screen.height : 100;
+		int canvasWidth = isScreenSize ? Screen.width : 200;
+		int canvasHeight = isScreenSize ? Screen.height : 100;
 
-		cam = new RTCamera(90, (float)texWidth / texHeight);
-
-		ppmTexture.Init(texWidth, texHeight);
+		cam = CreateCamera(canvasWidth, canvasHeight);
+		ppmTexture.Init(canvasWidth, canvasHeight);
 
         Vector3 origin = Vector3.zero;
         Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
@@ -98,6 +97,11 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
             renderingTasksManager = null;
         }
     }
+
+	public virtual IRTCamera CreateCamera(int canvasWidth, int canvasHeight)
+	{
+		return new RTCameraA();
+	}
 
     public virtual Color GetColor(RTRay ray, int depth)
     {

@@ -126,7 +126,7 @@ public class RenderingTask
 
     private RTRenderer renderer = null;
 
-    private RTCamera cam = null;
+	private IRTCamera cam = null;
 
     private int canvasWidth = 0;
 
@@ -162,7 +162,7 @@ public class RenderingTask
         }
     }
 
-    public void Init(RTRenderer renderer, RTCamera cam, int canvasWidth, int canvasHeight, int numSamples)
+	public void Init(RTRenderer renderer, IRTCamera cam, int canvasWidth, int canvasHeight, int numSamples)
     {
         if(IsInitialized())
         {

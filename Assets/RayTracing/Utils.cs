@@ -295,14 +295,34 @@ public class HitableList : Hitable
     }
 }
 
-public class RTCamera
+public interface IRTCamera
+{
+	RTRay GetRay(float u, float v);
+}
+
+public class RTCameraA : IRTCamera
+{
+	private Vector3 origin = Vector3.zero;
+	private Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
+	private Vector3 horizontal = new Vector3(4, 0, 0);
+	private Vector3 vertical = new Vector3(0, 2, 0);
+
+	public RTRay GetRay(float u, float v)
+	{
+		RTRay ray = new RTRay();
+		ray.Set(origin, leftBottomCorner + horizontal * u + vertical * v);
+		return ray;
+	}
+}
+
+public class RTCameraB : IRTCamera
 {
     private Vector3 origin = Vector3.zero;
 	private Vector3 leftBottomCorner = Vector3.zero;
 	private Vector3 horizontal = Vector3.zero;
 	private Vector3 vertical = Vector3.zero;
 
-	public RTCamera(float fov, float aspect)
+	public RTCameraB(float fov, float aspect)
 	{
 		float theta = fov * Mathf.PI / 180.0f;
 		float zPlane = -1;

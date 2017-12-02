@@ -40,6 +40,11 @@ public class ChapterBase : MonoBehaviour, RTRenderer
         return Color.white;
     }
 
+	public virtual IRTCamera CreateCamera(int canvasWidth, int canvasHeight)
+	{
+		return null;
+	}
+
     protected Color GetBackgroundColor(RTRay ray)
     {
         Vector3 unit_dir = ray.direction.normalized;
