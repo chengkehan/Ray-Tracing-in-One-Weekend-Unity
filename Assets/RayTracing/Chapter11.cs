@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chapter10 : ChapterBaseAntialiasing
+public class Chapter11 : ChapterBaseAntialiasing
 {
     private HitableList scene = null;
 
@@ -11,8 +11,6 @@ public class Chapter10 : ChapterBaseAntialiasing
 		base.Awake();
 
         ppmTexture.sRGB = true;
-		numSamples = 1000;
-		isScreenSize = true;
 
         scene = new HitableList();
 
@@ -77,13 +75,10 @@ public class Chapter10 : ChapterBaseAntialiasing
 
 	public override IRTCamera CreateCamera (int canvasWidth, int canvasHeight)
 	{
-		return new RTCameraC(new Vector3(-2, 2, 1), new Vector3(0, 0, -1), Vector3.up, 90, (float)canvasWidth / canvasHeight);
-	}
+		Vector3 lookFrom = new Vector3(3, 3, 2);
+		Vector3 lookAt = new Vector3(0, 0, -1);
+		float focus_dist = (lookAt - lookFrom).magnitude;
 
-	public override void RenderingComplete ()
-	{
-		base.RenderingComplete ();
-
-		System.IO.File.WriteAllBytes("/Users/jimCheng/Desktop/untitled folder/a.jpg", ppmTexture.Texture.EncodeToJPG(100));
+		return new RTCameraD(lookFrom, lookAt, Vector3.up, 20, (float)canvasWidth / canvasHeight, 2.0f, focus_dist);
 	}
 }
