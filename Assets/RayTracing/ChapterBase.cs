@@ -33,7 +33,19 @@ public class ChapterBase : MonoBehaviour, RTRenderer
         }
 
         ppmTexture.Complete();
+		RenderingComplete();
     }
+
+	public void StartRendering()
+	{
+		Awake();
+		Start();
+	}
+
+	public virtual void RenderingComplete()
+	{
+		// Do nothing
+	}
 
 	public virtual Color GetColor(RTRay ray, int depth)
     {

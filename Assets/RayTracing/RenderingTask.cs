@@ -11,6 +11,20 @@ public class RenderingTasksManager
 
     private List<Item> items = new List<Item>();
 
+	public bool IsAllTasksComplete()
+	{
+		int numItems = items.Count;
+		for(int i = 0; i < numItems; ++i)
+		{
+			Item item = items[i];
+			if(!item.task.IsComplete || !item.task.IsDestroied)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
     public void AddTask(RenderingTask task, TaskCompleteCB taskCompleteCB)
     {
         if(task == null || taskCompleteCB == null)

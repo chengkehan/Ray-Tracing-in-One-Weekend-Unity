@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 {
-    protected PPMTexture ppmTexture = new PPMTexture();
+	protected PPMTexture ppmTexture = null;
 
 	protected IRTCamera cam = null;
 
-    private RenderingTasksManager renderingTasksManager = new RenderingTasksManager();
+	private RenderingTasksManager renderingTasksManager = null;
 
 	protected bool multiThreadRendering = true;
 
@@ -19,6 +19,8 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
     protected virtual void Awake()
     {
 		RTMath.ThreadInitRnd();
+
+		ppmTexture = new PPMTexture();
     }
 
     protected virtual void Start()
@@ -28,6 +30,8 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
 		cam = CreateCamera(canvasWidth, canvasHeight);
 		ppmTexture.Init(canvasWidth, canvasHeight);
+
+		renderingTasksManager = new RenderingTasksManager();
 
         Vector3 origin = Vector3.zero;
         Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
@@ -78,14 +82,34 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
         if (!multiThreadRendering)
         {
             ppmTexture.Complete();
+			RenderingComplete();
         }
     }
+
+	public void StartRendering()
+	{
+		Awake();
+		Start();
+	}
+
+	public virtual void RenderingComplete()
+	{
+		// Do nothing
+	}
 
     private void Update()
     {
         if(renderingTasksManager != null && multiThreadRendering)
         {
             renderingTasksManager.Update();
+
+			if(renderingTasksManager.IsAllTasksComplete())
+			{
+				renderingTasksManager = null;
+				System.GC.Collect();
+
+				RenderingComplete();
+			}
         }
     }
 
