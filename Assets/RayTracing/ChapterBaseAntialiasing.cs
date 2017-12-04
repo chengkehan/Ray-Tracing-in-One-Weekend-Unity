@@ -33,11 +33,6 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
 		renderingTasksManager = new RenderingTasksManager();
 
-        Vector3 origin = Vector3.zero;
-        Vector3 leftBottomCorner = new Vector3(-2, -1, -1);
-        Vector3 horizontal = new Vector3(4, 0, 0);
-        Vector3 vertical = new Vector3(0, 2, 0);
-
         int pixelIndex = 0;
         RenderingTask task = null;
         int itemsCount = 0;
@@ -84,6 +79,10 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
             ppmTexture.Complete();
 			RenderingComplete();
         }
+		else
+		{
+			renderingTasksManager.Start();
+		}
     }
 
 	public void StartRendering()
@@ -105,6 +104,7 @@ public class ChapterBaseAntialiasing : MonoBehaviour, RTRenderer
 
 			if(renderingTasksManager.IsAllTasksComplete())
 			{
+				renderingTasksManager.Destroy();
 				renderingTasksManager = null;
 				System.GC.Collect();
 

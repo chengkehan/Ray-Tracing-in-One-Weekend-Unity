@@ -10,7 +10,7 @@ public class Chapter12 : ChapterBaseAntialiasing
     {
 		base.Awake();
 
-		numSamples = 800;
+		numSamples = 5;
 		isScreenSize = true;
         ppmTexture.sRGB = true;
 
@@ -74,5 +74,11 @@ public class Chapter12 : ChapterBaseAntialiasing
 		float focus_dist = (lookAt - lookFrom).magnitude;
 
 		return new RTCameraD(lookFrom, lookAt, Vector3.up, 20, (float)canvasWidth / canvasHeight, 0.1f, focus_dist);
+	}
+
+	public override void RenderingComplete ()
+	{
+		base.RenderingComplete ();
+		Debug.LogError("complete");
 	}
 }

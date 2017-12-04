@@ -11,13 +11,26 @@ public class RenderingTasksManager
 
     private List<Item> items = new List<Item>();
 
+	private Thread daemon = null;
+	private volatile bool daemonWorking = false;
+
+	public void Start()
+	{
+		if(daemon == null)
+		{
+			daemon = new Thread(DaemonWorking);
+			daemonWorking = true;
+			daemon.Start();
+		}
+	}
+
 	public bool IsAllTasksComplete()
 	{
 		int numItems = items.Count;
 		for(int i = 0; i < numItems; ++i)
 		{
 			Item item = items[i];
-			if(!item.task.IsComplete || !item.task.IsDestroied)
+			if(!item.task.IsDestroied)
 			{
 				return false;
 			}
@@ -39,30 +52,10 @@ public class RenderingTasksManager
     {
         int numItems = items.Count;
 
-        int numWorkingItems = 0;
         for(int i = 0; i < numItems; ++i)
         {
             Item item = items[i];
-            if(item.task.IsWorking)
-            {
-                ++numWorkingItems;
-            }
-        }
-
-        for(int i = 0; i < numItems; ++i)
-        {
-            Item item = items[i];
-            if (!item.task.IsWorking && !item.task.IsComplete && !item.task.IsDestroied && numWorkingItems + 1 <= CONCURRENCY)
-            {
-                item.task.Start();
-                ++numWorkingItems;
-            }
-        }
-
-        for(int i = 0; i < numItems; ++i)
-        {
-            Item item = items[i];
-            if(item.task.IsComplete && !item.task.IsDestroied)
+            if(item.task.IsComplete)
             {
                 item.taskCompeteCB(item.task);
                 item.task.Destroy();
@@ -81,7 +74,37 @@ public class RenderingTasksManager
             }
             items.Clear();
         }
+
+		daemonWorking = false;
     }
+
+	private void DaemonWorking()
+	{
+		while(daemonWorking)
+		{
+			int numItems = items.Count;
+
+			int numWorkingItems = 0;
+			for(int i = 0; i < numItems; ++i)
+			{
+				Item item = items[i];
+				if(item.task.IsWorking)
+				{
+					++numWorkingItems;
+				}
+			}
+
+			for(int i = 0; i < numItems; ++i)
+			{
+				Item item = items[i];
+				if (item.task.IsReady && numWorkingItems + 1 <= CONCURRENCY)
+				{
+					item.task.Start();
+					++numWorkingItems;
+				}
+			}
+		}
+	}
 
     private class Item
     {
@@ -93,42 +116,35 @@ public class RenderingTasksManager
 
 public class RenderingTask
 {
-    private volatile bool _isWorking = false;
+	public bool IsReady
+	{
+		get
+		{
+			return status == STATUS_READY;
+		}
+	}
+
     public bool IsWorking
     {
         get
         {
-            return _isWorking;
-        }
-        private set
-        {
-            _isWorking = value;
+			return status == STATUS_WORKING;
         }
     }
 
-    private volatile bool _isComplete = false;
     public bool IsComplete
     {
         get
         {
-            return _isComplete;
-        }
-        private set
-        {
-            _isComplete = value;
+			return status == STATUS_COMPLETE;
         }
     }
 
-    private volatile bool _isDestroied = false;
     public bool IsDestroied
     {
         get
         {
-            return _isDestroied;
-        }
-        private set
-        {
-            _isDestroied = value;
+			return status == STATUS_DESTROIED;
         }
     }
 
@@ -150,9 +166,16 @@ public class RenderingTask
 
     private Item[] items = new Item[SIZE];
 
+	private const int STATUS_UNDEFINED = 0;
+	private const int STATUS_READY = 1;
+	private const int STATUS_WORKING = 2;
+	private const int STATUS_COMPLETE = 3;
+	private const int STATUS_DESTROIED = 4;
+	private volatile int status = STATUS_UNDEFINED;
+
     public void Destroy()
     {
-        IsDestroied = true;
+		status = STATUS_DESTROIED;
     }
 
     public int NumItems()
@@ -178,7 +201,7 @@ public class RenderingTask
 
 	public void Init(RTRenderer renderer, IRTCamera cam, int canvasWidth, int canvasHeight, int numSamples)
     {
-        if(IsInitialized())
+		if(status != STATUS_UNDEFINED)
         {
             return;
         }
@@ -188,6 +211,7 @@ public class RenderingTask
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.numSamples = numSamples;
+		status = STATUS_READY;
     }
 
     public bool IsFull()
@@ -208,12 +232,12 @@ public class RenderingTask
 
     public void Start()
     {
-        if(IsWorking || IsComplete || !IsInitialized() || IsDestroied)
-        {
-            return;
-        }
+		if(status != STATUS_READY)
+		{
+			return;
+		}
 
-        IsWorking = true;
+		status = STATUS_WORKING;
         thread = new Thread(Working);
         thread.Start();
     }
@@ -226,8 +250,6 @@ public class RenderingTask
         {
             if(IsDestroied)
             {
-                IsWorking = false;
-                IsComplete = false;
                 return;
             }
 
@@ -246,13 +268,7 @@ public class RenderingTask
             items[i] = item;
         }
 
-        IsWorking = false;
-        IsComplete = true;
-    }
-
-    private bool IsInitialized()
-    {
-        return renderer != null && cam != null;
+		status = STATUS_COMPLETE;
     }
 
     private struct Item
